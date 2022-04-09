@@ -1,8 +1,12 @@
 package com.example.flashcardapp2;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,13 +39,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         question.setOnClickListener(v -> {
+            int cx = answer.getWidth() / 2;
+            int cy = answer.getHeight() / 2;
+
+            float finalRadius = (float) Math.hypot(cx, cy);
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(answer, cx, cy, 0f, finalRadius);
+
             question.setVisibility(View.INVISIBLE);
             answer.setVisibility(View.VISIBLE);
+
+            anim.setDuration(3000);
+            anim.start();
         });
 
         add.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
             MainActivity.this.startActivityForResult(intent, 100);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         });
 
         next.setOnClickListener(v -> {
@@ -55,10 +70,30 @@ public class MainActivity extends AppCompatActivity {
                 currentCardDisplayedIndex = 0;
             }
 
-            question.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
-            question.setVisibility(View.VISIBLE);
-            answer.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
-            answer.setVisibility(View.INVISIBLE);
+            final Animation leftOutAnim = AnimationUtils.loadAnimation(v.getContext(), R.anim.left_out);
+            final Animation rightInAnim = AnimationUtils.loadAnimation(v.getContext(), R.anim.right_in);
+
+            leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    question.startAnimation(leftOutAnim);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    question.startAnimation(rightInAnim);
+                    question.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
+                    question.setVisibility(View.VISIBLE);
+                    answer.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
+                    answer.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            question.startAnimation(leftOutAnim);
         });
     }
 

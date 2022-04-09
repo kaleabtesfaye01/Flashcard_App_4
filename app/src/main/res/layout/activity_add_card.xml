@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#cdcdcd">
 
   <ImageView
       android:id="@+id/cancel_button"
@@ -13,8 +14,7 @@
       android:src="@drawable/cancel"
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
-      android:layout_margin="15dp"
-      />
+      android:layout_margin="20dp" />
 
   <EditText
       android:id="@+id/edit_question"
@@ -31,7 +31,7 @@
       android:layout_below="@+id/edit_question"
       android:layout_margin="20dp"
       android:hint="Enter The Answer Here"
-      android:inputType="textMultiLine"/>
+      android:inputType="textMultiLine" />
 
   <ImageView
       android:id="@+id/save_button"
@@ -39,5 +39,5 @@
       android:layout_height="wrap_content"
       android:src="@drawable/save"
       android:layout_alignParentBottom="true"
-      android:layout_margin="15dp" />
+      android:layout_margin="20dp" />
 </RelativeLayout>
